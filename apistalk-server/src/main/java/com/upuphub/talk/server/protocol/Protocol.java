@@ -10,7 +10,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @date create time 2021-03-08 18:08
  **/
 public class Protocol {
+    @JsonProperty("header")
     protected Header header;
+    @JsonProperty("data")
     protected String data;
 
     public Protocol() {
@@ -21,13 +23,25 @@ public class Protocol {
     }
 
     public static class Header{
+        @JsonProperty("from")
         private String from = null;
+
+        @JsonProperty("to")
         private String to = null;
+
+        @JsonProperty("type")
         private byte type = 0;
+
         @JsonProperty("QoS")
         private byte QoS = 0;
+
+        @JsonProperty("rc")
         private transient int rc = 0;
+
+        @JsonProperty("fp")
         private String fp = null;
+
+        @JsonProperty("dataType")
         private String dataType = null;
 
         public Header() {

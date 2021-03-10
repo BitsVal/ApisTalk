@@ -1,7 +1,6 @@
 package com.upuphub.talk.server.network;
 
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.net.NetSocket;
 
 /**
  * Server Getaway

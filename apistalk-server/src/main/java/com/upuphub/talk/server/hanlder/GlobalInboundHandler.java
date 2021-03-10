@@ -1,6 +1,8 @@
 package com.upuphub.talk.server.hanlder;
 
-import com.upuphub.talk.server.content.SocketInitContent;
+import com.upuphub.talk.server.Environment;
+import com.upuphub.talk.server.content.SocketInitProcess;
+import com.upuphub.talk.server.content.SocketOnlineProcess;
 import com.upuphub.talk.server.protocol.Protocol;
 import com.upuphub.talk.server.protocol.ProtocolType;
 import io.vertx.core.Handler;
@@ -18,31 +20,24 @@ import org.slf4j.LoggerFactory;
  **/
 public class GlobalInboundHandler implements Handler<Buffer>{
     private final static Logger logger = LoggerFactory.getLogger(GlobalInboundHandler.class);
+    private final NetSocket socket;
 
     public GlobalInboundHandler(NetSocket socket) {
         // tcp连接建立完成后会走到这里
         // 需要做一个踢出的操作
-        logger.info("Call 1");
-        SocketInitContent.putSocket(socket,5000L);
-//        Protocol.Header header = new Protocol.Header(
-//                "123","456", ProtocolType.C.FROM_CLIENT_TYPE_OF_KEEP$ALIVE,(byte)1,2,"as","ds"
-//        );
-//        Protocol protocol = new Protocol(header, Collections.emptyList(),"XXXX");
-//        socket.write(JsonFactory.INSTANCE.codec().toBuffer(protocol));
+        this.socket = socket;
+        SocketInitProcess.putSocket(socket,5000L);
     }
 
     @Override
     public void handle(Buffer event) {
-        logger.info("Call 2");
-        Protocol.Header header = event.toJsonObject()
-                .getJsonObject(Protocol.R.HEADER)
-                .mapTo(Protocol.Header.class);
-        if(null == header){
+        Protocol protocol = event.toJsonObject().mapTo(Protocol.class);
+        if(null == protocol || null == protocol.getHeader()){
             logger.error("Protocol Error");
         }else {
-            switch (header.getType()){
+            switch (protocol.getHeader().getType()){
                 case ProtocolType.C.FROM_CLIENT_TYPE_OF_REGISTER:
-                    logger.error("Protocol Error");
+                    Environment.getVertx().eventBus().send("apis.s.register",protocol);
                     break;
                 case ProtocolType.C.FROM_CLIENT_TYPE_OF_KEEP$ALIVE:
                     logger.error("Protocol Error");

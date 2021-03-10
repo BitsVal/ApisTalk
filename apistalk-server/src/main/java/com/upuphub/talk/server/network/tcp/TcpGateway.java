@@ -3,8 +3,10 @@ package com.upuphub.talk.server.network.tcp;
 import com.upuphub.talk.server.hanlder.GlobalInboundHandler;
 import com.upuphub.talk.server.hanlder.SocketInitOutHandler;
 import com.upuphub.talk.server.network.Gateway;
+import com.upuphub.talk.server.process.RegisterProcess;
+import com.upuphub.talk.server.protocol.Protocol;
+import com.upuphub.talk.server.protocol.ProtocolMsgCodec;
 import io.vertx.core.Promise;
-import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,11 +45,5 @@ public class TcpGateway extends Gateway {
     @Override
     protected void before() {
         port = 8788;
-    }
-
-    public static void main(String[] args) {
-        Vertx vertx = Vertx.vertx();
-        vertx.deployVerticle(new TcpGateway());
-
     }
 }

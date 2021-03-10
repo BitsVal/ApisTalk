@@ -1,6 +1,6 @@
 package com.upuphub.talk.server.hanlder;
 
-import com.upuphub.talk.server.content.SocketInitContent;
+import com.upuphub.talk.server.content.SocketInitProcess;
 import io.vertx.core.Handler;
 
 /**
@@ -10,9 +10,9 @@ import io.vertx.core.Handler;
 public class SocketInitOutHandler implements Handler<Long> {
     @Override
     public void handle(Long event) {
-        SocketInitContent.getAll().forEach((socket,expireTime)->{
+        SocketInitProcess.getAll().forEach((socket, expireTime)->{
             if(expireTime < System.currentTimeMillis()){
-                SocketInitContent.removeSocket(socket);
+                SocketInitProcess.kickOutTheSocket(socket);
             }
         });
     }
