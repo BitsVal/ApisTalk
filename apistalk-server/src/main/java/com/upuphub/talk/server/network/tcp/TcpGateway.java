@@ -26,11 +26,11 @@ public class TcpGateway extends Gateway {
             id = socket.writeHandlerID();
             socket.handler(new GlobalInboundHandler(socket));
             // 监听客户端的退出连接
-            socket.closeHandler(close -> logger.info("客户端退出 - {}",socket.writeHandlerID()));
+            socket.closeHandler(close -> logger.info("客户端退出 - [{}]",socket.writeHandlerID()));
         }).listen(port,host, net -> {
             if (net.succeeded()) {
                 startPromise.complete();
-
+                logger.info("TcpGateway初始化成功,Host: {},Port: {}",host,port);
             }
         });
         // 这里清理建立了Tcp连接但是不作为的
