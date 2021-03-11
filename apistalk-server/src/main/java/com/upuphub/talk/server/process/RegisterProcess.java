@@ -1,6 +1,6 @@
 package com.upuphub.talk.server.process;
 
-import com.upuphub.talk.server.content.SocketOnlineProcess;
+import com.upuphub.talk.server.Environment;
 import com.upuphub.talk.server.protocol.Protocol;
 import io.vertx.core.Promise;
 import io.vertx.core.eventbus.Message;
@@ -30,7 +30,7 @@ public class RegisterProcess extends AbstractProtocolProcess {
     void handler(Message<Protocol> protocolMsg) {
         logger.info("Message From {}",protocolMsg.body().getHeader().getFrom());
         Protocol protocol = protocolMsg.body();
-        if(SocketOnlineProcess.isRegistered(protocol.getHeader().getFrom())){
+        if(Environment.isRegistered(protocol.getHeader().getFrom())){
             // todo 这里返回重复注册
         }else {
             // todo 这里可以通过验证某些参数,验证用户能否正常合法建立连接,不能合法建立连接,直接关闭该次TCP链接

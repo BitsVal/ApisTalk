@@ -1,6 +1,7 @@
 package com.upuphub.talk.server.protocol;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
