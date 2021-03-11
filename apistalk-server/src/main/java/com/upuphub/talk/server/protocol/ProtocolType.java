@@ -14,6 +14,8 @@ public interface ProtocolType {
     public interface C{
         /** 由客户端发出 - 协议类型： */
         byte FROM_CLIENT_TYPE_OF_REGISTER = 0;
+        String FROM_CLIENT_TYPE_OF_REGISTER_EVENT_ADDRESS = "apis.s.register";
+
         /** 由客户端发出 - 协议类型：心跳包 */
         byte FROM_CLIENT_TYPE_OF_KEEP$ALIVE = 1;
         /** 由客户端发出 - 协议类型：发送通用数据 */

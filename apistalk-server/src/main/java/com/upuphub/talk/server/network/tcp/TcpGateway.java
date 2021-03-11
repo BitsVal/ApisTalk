@@ -1,5 +1,6 @@
 package com.upuphub.talk.server.network.tcp;
 
+import com.upuphub.talk.server.Environment;
 import com.upuphub.talk.server.network.Gateway;
 import com.upuphub.talk.server.protocol.Protocol;
 import com.upuphub.talk.server.protocol.ProtocolType;
@@ -28,9 +29,12 @@ public class TcpGateway extends Gateway {
                 if(null == protocol || null == protocol.getHeader()){
                     logger.error("Protocol Error");
                 }else {
+                    protocol.getHeader().setSocketId(socket.writeHandlerID());
+                    Environment.registerSocket(socket);
                     switch (protocol.getHeader().getType()){
+                        // todo 这里可以优化成有根据Type执行映射成对应对象并发送
                         case ProtocolType.C.FROM_CLIENT_TYPE_OF_REGISTER:
-                            vertx.eventBus().send("apis.s.register",protocol);
+                            vertx.eventBus().send(ProtocolType.C.FROM_CLIENT_TYPE_OF_REGISTER_EVENT_ADDRESS,protocol);
                             break;
                         case ProtocolType.C.FROM_CLIENT_TYPE_OF_KEEP$ALIVE:
                             logger.error("Protocol Error");
@@ -58,9 +62,9 @@ public class TcpGateway extends Gateway {
             }
         });
         // 这里清理建立了Tcp连接但是不作为的
-        vertx.setPeriodic(2000,event -> {
-            vertx.eventBus().publish(id, Buffer.buffer("hello"));
-        });
+//        vertx.setPeriodic(2000,event -> {
+//            vertx.eventBus().publish(id, Buffer.buffer("hello"));
+//        });
     }
 
     @Override

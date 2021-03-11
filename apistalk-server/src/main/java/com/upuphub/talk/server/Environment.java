@@ -5,9 +5,7 @@ import io.vertx.core.net.NetSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -18,13 +16,12 @@ import java.util.concurrent.ConcurrentHashMap;
  **/
 public final class Environment {
     private static final Logger logger = LoggerFactory.getLogger(Environment.class);
-    private static final transient Map<NetSocket, Long> TCP_INIT_SOCKETS = new ConcurrentHashMap<>();
-    private static final transient Map<String,String> P2S_ONLINE_SOCKETS = new ConcurrentHashMap<>();
+    private static final transient Map<String, NetSocket> CONNECTED_TCP_SOCKETS = new ConcurrentHashMap<>();
+    private static final transient Map<String, Set<String>> P2S_ONLINE_SOCKETS = new ConcurrentHashMap<>();
     private static final transient Map<String,String> S2P_ONLINE_SOCKETS = new ConcurrentHashMap<>();
 
     private static Environment instance = null;
     private static Vertx vertx;
-    private String config;
 
     public Environment(Vertx vertx) {
         Environment.vertx = vertx;
@@ -34,52 +31,45 @@ public final class Environment {
         return Environment.vertx;
     }
 
-    public String getConfig() {
-        return config;
-    }
-
-    public void setConfig(String config) {
-        this.config = config;
-    }
-
-    public static void putSocket(String to,NetSocket netSocket){
-        synchronized (Environment.class){
-            String handlerId = netSocket.writeHandlerID();
-            if(P2S_ONLINE_SOCKETS.containsKey(to)){
-                String socketIdBak = P2S_ONLINE_SOCKETS.get(to);
-                if(socketIdBak.equals(netSocket.writeHandlerID())){
-                    logger.warn("重复注册Socket链接 {} {}",to,handlerId);
-                }else {
-                    logger.warn("刷新Socket链接、这里可能需要考虑是否踢掉原来的链接 {} {} {}",to,handlerId,socketIdBak);
-                }
-            }
-            P2S_ONLINE_SOCKETS.put(to, handlerId);
-            S2P_ONLINE_SOCKETS.put(handlerId,to);
+    public static void registerSocket(NetSocket socket) {
+        String handlerId = socket.writeHandlerID();
+        if(!CONNECTED_TCP_SOCKETS.containsKey(socket.writeHandlerID())){
+            CONNECTED_TCP_SOCKETS.put(handlerId,socket);
         }
-
-    }
-
-    public static void removeSocketByTo(String to){
-        if(P2S_ONLINE_SOCKETS.containsKey(to)){
-            String socketId = P2S_ONLINE_SOCKETS.get(to);
-            P2S_ONLINE_SOCKETS.remove(to);
-            S2P_ONLINE_SOCKETS.remove(socketId);
-        }
-    }
-
-    public static Set<String> getAllSocketIdSet(){
-        return new HashSet<>(P2S_ONLINE_SOCKETS.values());
     }
 
     public static boolean isRegistered(String from) {
         return P2S_ONLINE_SOCKETS.containsKey(from);
     }
 
-    public static Map<NetSocket, Long> getAllInitSocketsAndExpireTime(){
-        return TCP_INIT_SOCKETS;
+    public static void registerConnectionSession(String from, String socketId) {
+        synchronized (CONNECTED_TCP_SOCKETS){
+            if(CONNECTED_TCP_SOCKETS.containsKey(socketId)){
+                if(P2S_ONLINE_SOCKETS.containsKey(from)){
+                    if(P2S_ONLINE_SOCKETS.get(from).contains(socketId)){
+                        // todo 这个可能用户多端登陆,这里可以处理用户多端登陆的问题
+                        P2S_ONLINE_SOCKETS.get(from).add(socketId);
+                    }else {
+                        logger.warn("这里用户可能建立多个链接?,断开链接重试?");
+                    }
+                }else {
+                    Set<String> sockets = new HashSet<>();
+                    sockets.add(socketId);
+                    P2S_ONLINE_SOCKETS.put(from,sockets);
+                    S2P_ONLINE_SOCKETS.put(socketId,from);
+                }
+            }else {
+                throw new RuntimeException();
+            }
+        }
     }
 
-    public static void removeSocketFromInitContainer(NetSocket netSocket) {
-        TCP_INIT_SOCKETS.remove(netSocket);
+    public static void pickOutSocketBySocketId(String socketId) {
+        synchronized (CONNECTED_TCP_SOCKETS){
+            if(CONNECTED_TCP_SOCKETS.containsKey(socketId)){
+                CONNECTED_TCP_SOCKETS.get(socketId).close();
+                CONNECTED_TCP_SOCKETS.remove(socketId);
+            }
+        }
     }
 }

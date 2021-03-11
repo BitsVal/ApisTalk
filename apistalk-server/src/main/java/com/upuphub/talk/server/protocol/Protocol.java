@@ -45,6 +45,9 @@ public class Protocol {
         @JsonProperty("dataType")
         private String dataType = null;
 
+        @JsonIgnore
+        private String socketId;
+
         public Header() {
         }
 
@@ -112,6 +115,14 @@ public class Protocol {
 
         public void setDataType(String dataType) {
             this.dataType = dataType;
+        }
+
+        public String getSocketId() {
+            return socketId;
+        }
+
+        public void setSocketId(String socketId) {
+            this.socketId = socketId;
         }
     }
 
