@@ -1,3 +1,4 @@
 rootProject.name = 'ApisTalk'
 include 'apistalk-server'
+include 'apistalk-client'
 
