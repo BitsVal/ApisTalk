@@ -38,6 +38,7 @@ public interface ProtocolType {
         byte FROM_SERVER_TYPE_OF_RESPONSE$ECHO = 63;
         /** 由服务端发出 - 协议类型：QoS保证机制中的消息应答包 */
         byte FROM_SERVER_TYPE_OF_RECEIVED = 64;
+        String FROM_SERVER_TYPE_OF_RECEIVED_EVENT_ADDRESS = "apis.s.received";
     }
 
     public interface QoS{

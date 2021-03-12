@@ -15,7 +15,7 @@ import io.vertx.core.Vertx;
  * @author Inspiration S.P.A Leo
  * @date create time 2021-03-09 11:35
  **/
-public class ServerLauncher {
+public abstract class ServerLauncher {
     public static int supportedGateways = 0;
     private boolean running = false;
     private Gateway TCP_GATEWAY;
@@ -39,10 +39,6 @@ public class ServerLauncher {
         Environment.getVertx().eventBus().registerDefaultCodec(Protocol.class, ProtocolMsgCodec.create());
         Environment.getVertx().deployVerticle(TcpGateway.class.getName(), new DeploymentOptions().setInstances(8));
         Environment.getVertx().deployVerticle(RegisterProcess.class.getName(),new DeploymentOptions().setInstances(8));
-    }
-
-    public static void main(String[] args) throws Exception {
-        new ServerLauncher().startup();
     }
 
 
