@@ -7,7 +7,7 @@ import io.vertx.core.eventbus.Message;
  * @author Inspiration S.P.A Leo
  * @date create time 2021-03-12 18:00
  **/
-public interface ProtocolHandler {
+public interface ApisHandler {
     String  bindEventAddress();
     void handler(Message<Protocol> protocolMsg);
 }

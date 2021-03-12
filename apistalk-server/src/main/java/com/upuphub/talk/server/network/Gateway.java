@@ -29,5 +29,4 @@ public abstract class Gateway extends AbstractVerticle {
     protected abstract void before();
 
 
-
 }

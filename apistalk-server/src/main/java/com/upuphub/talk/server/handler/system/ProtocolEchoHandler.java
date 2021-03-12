@@ -1,4 +1,4 @@
-package com.upuphub.talk.server.process;
+package com.upuphub.talk.server.handler.system;
 
 import com.upuphub.talk.server.Environment;
 import com.upuphub.talk.server.protocol.Protocol;
@@ -15,8 +15,8 @@ import org.slf4j.LoggerFactory;
  * @author Inspiration S.P.A Leo
  * @date create time 2021-03-10 22:37
  **/
-public class RegisterProcess extends AbstractProtocolProcess {
-    private final Logger logger = LoggerFactory.getLogger(RegisterProcess.class);
+public class ProtocolEchoHandler extends AbstractSystemApisHandler {
+    private final Logger logger = LoggerFactory.getLogger(ProtocolEchoHandler.class);
 
     @Override
     public void start(Promise<Void> startPromise) throws Exception {
@@ -24,12 +24,12 @@ public class RegisterProcess extends AbstractProtocolProcess {
     }
 
     @Override
-    String bindEventAddress() {
-        return ProtocolType.C.FROM_CLIENT_TYPE_OF_REGISTER_EVENT_ADDRESS;
+    ProtocolType.C bindProtocolType() {
+        return ProtocolType.C.FROM_CLIENT_TYPE_OF_ECHO;
     }
 
     @Override
-    void handler(Message<Protocol> protocolMsg) {
+    public void handler(Message<Protocol> protocolMsg) {
         Protocol protocol = protocolMsg.body();
         if(Environment.isRegistered(protocol.getHeader().getFrom())){
             // todo 这里返回重复注册

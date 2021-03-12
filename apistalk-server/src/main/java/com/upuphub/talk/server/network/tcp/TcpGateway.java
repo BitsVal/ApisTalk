@@ -1,11 +1,12 @@
 package com.upuphub.talk.server.network.tcp;
 
 import com.upuphub.talk.server.Environment;
+import com.upuphub.talk.server.factory.ProtocalFactory;
 import com.upuphub.talk.server.network.Gateway;
 import com.upuphub.talk.server.protocol.Protocol;
 import com.upuphub.talk.server.protocol.ProtocolType;
+import com.upuphub.talk.server.utils.StringUtils;
 import io.vertx.core.Promise;
-import io.vertx.core.buffer.Buffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,39 +18,34 @@ import org.slf4j.LoggerFactory;
  **/
 public class TcpGateway extends Gateway {
     Logger logger = LoggerFactory.getLogger(TcpGateway.class);
-    String id = "";
 
     @Override
     public void start(Promise<Void> startPromise) throws Exception {
         before();
         vertx.createNetServer().connectHandler(socket->{
-            id = socket.writeHandlerID();
             socket.handler(event -> {
-                Protocol protocol = event.toJsonObject().mapTo(Protocol.class);
+                logger.error(event.toString());
+                Protocol protocol = null;
+                try {
+                    protocol = event.toJsonObject().mapTo(Protocol.class);
+                }catch (Exception ignore){
+                    logger.error("Protocol Error");
+                    socket.write(ProtocalFactory.createProtocolErrorResponse(
+                            socket.localAddress().host(),socket.remoteAddress().host()));
+                    return;
+                }
                 if(null == protocol || null == protocol.getHeader()){
                     logger.error("Protocol Error");
+                    socket.write(ProtocalFactory.createProtocolErrorResponse(
+                            socket.localAddress().host(),socket.remoteAddress().host()));
                 }else {
                     protocol.getHeader().setSocketId(socket.writeHandlerID());
                     Environment.registerSocket(socket);
-                    switch (protocol.getHeader().getType()){
-                        // todo 这里可以优化成有根据Type执行映射成对应对象并发送
-                        case ProtocolType.C.FROM_CLIENT_TYPE_OF_REGISTER:
-                            vertx.eventBus().send(ProtocolType.C.FROM_CLIENT_TYPE_OF_REGISTER_EVENT_ADDRESS,protocol);
-                            break;
-                        case ProtocolType.C.FROM_CLIENT_TYPE_OF_KEEP$ALIVE:
-                            logger.error("Protocol Error");
-                            break;
-                        case ProtocolType.C.FROM_CLIENT_TYPE_OF_COMMON$DATA:
-                            logger.error("Protocol Error");
-                            break;
-                        case ProtocolType.C.FROM_CLIENT_TYPE_OF_ECHO:
-                            logger.error("Protocol Error");
-                            break;
-                        case ProtocolType.C.FROM_CLIENT_TYPE_OF_RECEIVED:
-                            logger.error("Protocol Error");
-                            break;
-                        default:
-                            break;
+                    String address = ProtocolType.C.getProtocolHandlerEventAddressByType(protocol.getHeader().getType());
+                    if(StringUtils.isEmpty(address)){
+                        logger.warn("protocol type not support");
+                    }else {
+                        vertx.eventBus().send(address,protocol);
                     }
                 }
             });
@@ -61,10 +57,6 @@ public class TcpGateway extends Gateway {
                 logger.info("TcpGateway初始化成功,Host: {},Port: {}",host,port);
             }
         });
-        // 这里清理建立了Tcp连接但是不作为的
-//        vertx.setPeriodic(2000,event -> {
-//            vertx.eventBus().publish(id, Buffer.buffer("hello"));
-//        });
     }
 
     @Override

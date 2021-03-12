@@ -3,7 +3,7 @@ package com.upuphub.talk.server;
 import com.upuphub.talk.server.network.Gateway;
 import com.upuphub.talk.server.network.tcp.TcpGateway;
 import com.upuphub.talk.server.network.udp.UDPGateway;
-import com.upuphub.talk.server.process.RegisterProcess;
+import com.upuphub.talk.server.handler.system.ProtocolRegisterHandler;
 import com.upuphub.talk.server.protocol.Protocol;
 import com.upuphub.talk.server.protocol.ProtocolMsgCodec;
 import io.vertx.core.DeploymentOptions;
@@ -38,7 +38,7 @@ public abstract class ServerLauncher {
         Environment environment = new Environment(Vertx.vertx());
         Environment.getVertx().eventBus().registerDefaultCodec(Protocol.class, ProtocolMsgCodec.create());
         Environment.getVertx().deployVerticle(TcpGateway.class.getName(), new DeploymentOptions().setInstances(8));
-        Environment.getVertx().deployVerticle(RegisterProcess.class.getName(),new DeploymentOptions().setInstances(8));
+        Environment.getVertx().deployVerticle(ProtocolRegisterHandler.class.getName(),new DeploymentOptions().setInstances(8));
     }
 
 
