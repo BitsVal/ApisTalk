@@ -2,6 +2,7 @@ package com.upuphub.talk.server.network.tcp;
 
 import com.upuphub.talk.server.Environment;
 import com.upuphub.talk.server.factory.ProtocalFactory;
+import com.upuphub.talk.server.network.BufferRecordParser;
 import com.upuphub.talk.server.network.Gateway;
 import com.upuphub.talk.server.protocolold.Protocol_OLD;
 import com.upuphub.talk.server.protocolold.ProtocolType;
@@ -26,38 +27,8 @@ public class TcpGateway extends Gateway {
     public void start(Promise<Void> startPromise) throws Exception {
         before();
         vertx.createNetServer().connectHandler(socket->{
-            RecordParser recordParser = RecordParser.newFixed(4);
-            recordParser.setOutput(new Handler<Buffer>() {
-                // 表示当前数据长度
-                int size = -1;
-                @Override
-                public void handle(Buffer event) {
-                    // -1表示当前还没有长度信息，需要从收到的数据中取出长度
-                    if (-1 == size) {
-                        // 取出长度
-                        size = event.getInt(0);
-                        // 动态修改长度
-                        recordParser.fixedSizeMode(size);
 
-                    } else {
-                        // 如果size != -1, 说明已经接受到长度信息了，接下来的数据就是protobuf可识别的字节数组
-                        byte[] buf = event.getBytes();
-//                        Message msg = null;
-//                        try {
-//                            msg = Message.parseFrom(buf);
-//                        } catch (InvalidProtocolBufferException e) {
-//                            System.out.println(e.getMessage());
-//                            socket.close();
-//                            return;
-//                        }
-                        // 处理完后要将长度改回4
-                        recordParser.fixedSizeMode(4);
-                        // 重置size变量
-                        size = -1;
-                    }
-                }
-            });
-            socket.handler(recordParser);//event -> {
+            socket.handler(BufferRecordParser.newProtocolParser(socket,vertx.eventBus()));//event -> {
 //                logger.error(event.toString());
 //                Protocol_OLD protocolOLD = null;
 //                try {
