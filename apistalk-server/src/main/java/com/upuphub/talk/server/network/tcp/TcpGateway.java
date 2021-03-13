@@ -1,16 +1,8 @@
 package com.upuphub.talk.server.network.tcp;
 
-import com.upuphub.talk.server.Environment;
-import com.upuphub.talk.server.factory.ProtocalFactory;
-import com.upuphub.talk.server.network.BufferRecordParser;
+import com.upuphub.talk.server.network.ProtocolLengthRecordParser;
 import com.upuphub.talk.server.network.Gateway;
-import com.upuphub.talk.server.protocolold.Protocol_OLD;
-import com.upuphub.talk.server.protocolold.ProtocolType;
-import com.upuphub.talk.server.utils.StringUtils;
-import io.vertx.core.Handler;
 import io.vertx.core.Promise;
-import io.vertx.core.buffer.Buffer;
-import io.vertx.core.parsetools.RecordParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +20,7 @@ public class TcpGateway extends Gateway {
         before();
         vertx.createNetServer().connectHandler(socket->{
 
-            socket.handler(BufferRecordParser.newProtocolParser(socket,vertx.eventBus()));//event -> {
+            socket.handler(ProtocolLengthRecordParser.newProtocolParser(socket,vertx.eventBus()));//event -> {
 //                logger.error(event.toString());
 //                Protocol_OLD protocolOLD = null;
 //                try {

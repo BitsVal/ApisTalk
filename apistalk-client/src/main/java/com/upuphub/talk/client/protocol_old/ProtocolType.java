@@ -1,4 +1,4 @@
-package com.upuphub.talk.client.protocol;
+package com.upuphub.talk.client.protocol_old;
 
 /**
  * Apis消息协议类型

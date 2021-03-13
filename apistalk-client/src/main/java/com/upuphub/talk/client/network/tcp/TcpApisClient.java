@@ -1,8 +1,6 @@
 package com.upuphub.talk.client.network.tcp;
 
 import com.upuphub.talk.client.network.ApisClient;
-import com.upuphub.talk.client.protocol.Protocol;
-import com.upuphub.talk.client.protocol.ProtocolType;
 import io.vertx.core.Promise;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.net.NetSocket;

@@ -1,7 +1,7 @@
 package com.upuphub.talk.client.process;
 
-import com.upuphub.talk.client.protocol.Protocol;
-import com.upuphub.talk.client.protocol.ProtocolType;
+import com.upuphub.talk.client.protocol_old.ProtocolOld;
+import com.upuphub.talk.client.protocol_old.ProtocolType;
 import io.vertx.core.eventbus.Message;
 
 /**
@@ -15,7 +15,7 @@ public class ReceivedProcess extends AbstractProtocolProcess{
     }
 
     @Override
-    void handler(Message<Protocol> protocolMsg) {
+    void handler(Message<ProtocolOld> protocolMsg) {
 
 
     }

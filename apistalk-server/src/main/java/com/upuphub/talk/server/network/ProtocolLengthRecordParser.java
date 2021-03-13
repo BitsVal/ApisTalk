@@ -12,7 +12,7 @@ import io.vertx.core.parsetools.RecordParser;
  * @author Inspiration S.P.A Leo
  * @date create time 2021-03-13 14:58
  **/
-public class BufferRecordParser {
+public class ProtocolLengthRecordParser {
     private static final Integer FRAME_TOKEN_SIZE = 4;
 
     public static RecordParser newProtocolParser(NetSocket netSocket, EventBus eventBus){
