@@ -17,9 +17,7 @@ import java.util.UUID;
  * @author Inspiration S.P.A Leo
  * @date create time 2021-03-09 09:52
  **/
-public final class ProtocalFactory {
-
-
+public final class ProtocolFactory {
     public static Buffer buildAuthorizationReq(String from, String to, String value){
         Protocol protocol = Protocol.newBuilder()
                 .setHeader(Header.newBuilder()

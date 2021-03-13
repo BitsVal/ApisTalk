@@ -1,8 +1,10 @@
 package com.upuphub.talk.server.network;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import com.upuphub.talk.server.factory.ProtocalFactory;
+import com.upuphub.talk.server.factory.ProtocolFactory;
+import com.upuphub.talk.server.factory.ProtocolTypeFactory;
 import com.upuphub.talk.server.protocol.Protocol;
+import com.upuphub.talk.server.utils.NumberUtil;
 import io.vertx.core.Handler;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.eventbus.EventBus;
@@ -28,11 +30,8 @@ public class ProtocolLengthRecordParser {
             public void handle(Buffer event) {
                 switch (frameToken){
                     case SIZE:
-//                        byte[] b = buffer.getString(0, 2)
-//                                .getBytes();
-//                        int frameSize = (((b[0]) & 0xFF) << 8) | ((b[1]) & 0xFF);
-                        int frameSize = event.getInt(0);
                         // 动态修改长度
+                        int frameSize = NumberUtil.byte4ToInt(event.getBuffer(0,FRAME_TOKEN_SIZE).getBytes());
                         recordParser.fixedSizeMode(frameSize);
                         frameToken =FrameToken.PAYLOAD;
                         break;
@@ -42,9 +41,17 @@ public class ProtocolLengthRecordParser {
                         Protocol protocol = null;
                         try {
                             protocol = Protocol.parseFrom(buf);
-                            netSocket.write(ProtocalFactory.buildAuthorizationReq("Server","Client","Token"));
+                            netSocket.write(ProtocolFactory.buildAuthorizationReq("Server","Client","Token"));
                             logger.debug(protocol.toString());
-//                            eventBus.send("",protocol);
+                            eventBus.<Protocol>request(
+                                    ProtocolTypeFactory.getEventAddressByCmd(protocol.getHeader().getCmd()),
+                                    protocol, rsp->{
+                                if(rsp.succeeded() && null != rsp.result().body()){
+                                    netSocket.write(Buffer.buffer(rsp.result().body().toByteArray()));
+                                }else{
+                                    netSocket.write(ProtocolFactory.buildAuthorizationReq("C","S","T"));
+                                }
+                            });
                         } catch (InvalidProtocolBufferException e) {
                             netSocket.close();
                             return;

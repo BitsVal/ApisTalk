@@ -21,31 +21,6 @@ public class TcpGateway extends Gateway {
         vertx.createNetServer().connectHandler(socket->{
 
             socket.handler(ProtocolLengthRecordParser.newProtocolParser(socket,vertx.eventBus()));//event -> {
-//                logger.error(event.toString());
-//                Protocol_OLD protocolOLD = null;
-//                try {
-//                    protocolOLD = event.toJsonObject().mapTo(Protocol_OLD.class);
-//                }catch (Exception ignore){
-//                    logger.error("Protocol Error");
-//                    socket.write(ProtocalFactory.createProtocolErrorResponse(
-//                            socket.localAddress().host(),socket.remoteAddress().host()));
-//                    return;
-//                }
-//                if(null == protocolOLD || null == protocolOLD.getHeader()){
-//                    logger.error("Protocol Error");
-//                    socket.write(ProtocalFactory.createProtocolErrorResponse(
-//                            socket.localAddress().host(),socket.remoteAddress().host()));
-//                }else {
-//                    protocolOLD.getHeader().setSocketId(socket.writeHandlerID());
-//                    Environment.registerSocket(socket);
-//                    String address = ProtocolType.C.getProtocolHandlerEventAddressByType(protocolOLD.getHeader().getType());
-//                    if(StringUtils.isEmpty(address)){
-//                        logger.warn("protocol type not support");
-//                    }else {
-//                        vertx.eventBus().send(address, protocolOLD);
-//                    }
-//                }
-//            });
             // 监听客户端的退出连接
             socket.closeHandler(close -> logger.info("客户端退出 - [{}]",socket.writeHandlerID()));
         }).listen(port,host, net -> {
