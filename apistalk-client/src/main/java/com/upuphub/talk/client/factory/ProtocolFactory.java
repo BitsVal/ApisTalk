@@ -1,11 +1,11 @@
-package com.upuphub.talk.server.factory;
+package com.upuphub.talk.client.factory;
 
 import com.google.protobuf.ByteString;
-import com.upuphub.talk.server.protocol.CMD;
-import com.upuphub.talk.server.protocol.Header;
-import com.upuphub.talk.server.protocol.Protocol;
-import com.upuphub.talk.server.protocol.QoS;
-import com.upuphub.talk.server.utils.NumberUtil;
+import com.upuphub.talk.client.protocol.CMD;
+import com.upuphub.talk.client.protocol.Header;
+import com.upuphub.talk.client.protocol.Protocol;
+import com.upuphub.talk.client.protocol.QoS;
+import com.upuphub.talk.client.util.NumberUtil;
 import io.vertx.core.buffer.Buffer;
 
 import java.nio.charset.Charset;
@@ -17,13 +17,12 @@ import java.util.UUID;
  * @author Inspiration S.P.A Leo
  * @date create time 2021-03-09 09:52
  **/
-public final class ProtocalFactory {
+public final class ProtocolFactory {
 
-
-    public static Buffer buildAuthorizationReq(String from, String to, String value){
+    public static Buffer buildAuthorizationReq(String from,String to,String value){
         Protocol protocol = Protocol.newBuilder()
                 .setHeader(Header.newBuilder()
-                        .setCmd(CMD.CMD_AUTHORIZATION_RSP)
+                        .setCmd(CMD.CMD_AUTHORIZATION_REQ)
                         .setFrom(from)
                         .setTo(to)
                         .setFingerPrint(UUID.randomUUID().toString())

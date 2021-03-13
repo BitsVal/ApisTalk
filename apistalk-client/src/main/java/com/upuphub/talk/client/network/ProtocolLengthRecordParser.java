@@ -2,6 +2,7 @@ package com.upuphub.talk.client.network;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.upuphub.talk.client.protocol.Protocol;
+import com.upuphub.talk.client.util.NumberUtil;
 import io.vertx.core.Handler;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.eventbus.EventBus;
@@ -24,10 +25,8 @@ public class ProtocolLengthRecordParser {
             public void handle(Buffer event) {
                 switch (frameToken){
                     case SIZE:
-//                        byte[] b = buffer.getString(0, 2)
-//                                .getBytes();
-//                        int frameSize = (((b[0]) & 0xFF) << 8) | ((b[1]) & 0xFF);
-                        int frameSize = event.getInt(0);
+                        int frameSize = NumberUtil.byte4ToInt(
+                                event.getBuffer(0,FRAME_TOKEN_SIZE).getBytes());
                         // 动态修改长度
                         recordParser.fixedSizeMode(frameSize);
                         frameToken =FrameToken.PAYLOAD;
@@ -38,7 +37,7 @@ public class ProtocolLengthRecordParser {
                         Protocol protocol = null;
                         try {
                             protocol = Protocol.parseFrom(buf);
-                            eventBus.send("",protocol);
+                            System.out.println(protocol.toString());
                         } catch (InvalidProtocolBufferException e) {
                             netSocket.close();
                             return;

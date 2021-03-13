@@ -1,8 +1,9 @@
 package com.upuphub.talk.client.network.tcp;
 
+import com.upuphub.talk.client.factory.ProtocolFactory;
 import com.upuphub.talk.client.network.ApisClient;
+import com.upuphub.talk.client.network.ProtocolLengthRecordParser;
 import io.vertx.core.Promise;
-import io.vertx.core.buffer.Buffer;
 import io.vertx.core.net.NetSocket;
 
 /**
@@ -21,72 +22,69 @@ public class TcpApisClient extends ApisClient {
             if(res.succeeded()){
                 NetSocket socket = res.result();
                 id = socket.writeHandlerID();
-                res.result().handler(event -> {
-                    System.out.println(event.toString());
-
-//                    Protocol protocol = event.toJsonObject().mapTo(Protocol.class);
-//                    if(null == protocol || null == protocol.getHeader()){
-//
-//                    }else{
-//                        switch (protocol.getHeader().getType()){
-//                            case ProtocolType.S.FROM_SERVER_TYPE_OF_RECEIVED:
-//                                vertx.eventBus().send(
-//                                        ProtocolType.S.FROM_SERVER_TYPE_OF_RECEIVED_EVENT_ADDRESS,protocol);
-//                                break;
-//                            case ProtocolType.S.FROM_SERVER_TYPE_OF_COMMON$DATA:
-//                                break;
-//                            default:
-//                                break;
-//                        }
-//                    }
-                });
+                res.result().handler(ProtocolLengthRecordParser.newProtocolParser(socket, vertx.eventBus()));
             }
         });
-        vertx.setPeriodic(1000,h->{
-            vertx.eventBus().send(id, Buffer.buffer("\"header\":{\"from\":\"demoData\",\"to\":\"demoData\",\"type\":0,\"QoS\":1,\"rc\":1,\"fp\":\"demoData\",\"dataType\":\"demoData\"},\"data\":\"token\"}"));
+        vertx.setPeriodic(1,h->{
+            vertx.eventBus().send(id, ProtocolFactory.buildAuthorizationReq("Client","Server","Token"));
         });
-//        vertx.setPeriodic(1,h->{
-//            vertx.eventBus().send(id, Buffer.buffer("\"header\":{\"from\":\"demoData\",\"to\":\"demoData\",\"type\":0,\"QoS\":1,\"rc\":1,\"fp\":\"demoData\",\"dataType\":\"demoData\"},\"data\":\"token\"}"));
-//        });
-//        vertx.setPeriodic(1,h->{
-//            vertx.eventBus().send(id, Buffer.buffer("\"header\":{\"from\":\"demoData\",\"to\":\"demoData\",\"type\":0,\"QoS\":1,\"rc\":1,\"fp\":\"demoData\",\"dataType\":\"demoData\"},\"data\":\"token\"}"));
-//        });
-//        vertx.setPeriodic(1,h->{
-//            vertx.eventBus().send(id, Buffer.buffer("\"header\":{\"from\":\"demoData\",\"to\":\"demoData\",\"type\":0,\"QoS\":1,\"rc\":1,\"fp\":\"demoData\",\"dataType\":\"demoData\"},\"data\":\"token\"}"));
-//        });
-//        vertx.setPeriodic(1,h->{
-//            vertx.eventBus().send(id, Buffer.buffer("\"header\":{\"from\":\"demoData\",\"to\":\"demoData\",\"type\":0,\"QoS\":1,\"rc\":1,\"fp\":\"demoData\",\"dataType\":\"demoData\"},\"data\":\"token\"}"));
-//        });
-//        vertx.setPeriodic(1,h->{
-//            vertx.eventBus().send(id, Buffer.buffer("\"header\":{\"from\":\"demoData\",\"to\":\"demoData\",\"type\":0,\"QoS\":1,\"rc\":1,\"fp\":\"demoData\",\"dataType\":\"demoData\"},\"data\":\"token\"}"));
-//        });
-//        vertx.setPeriodic(1,h->{
-//            vertx.eventBus().send(id, Buffer.buffer("\"header\":{\"from\":\"demoData\",\"to\":\"demoData\",\"type\":0,\"QoS\":1,\"rc\":1,\"fp\":\"demoData\",\"dataType\":\"demoData\"},\"data\":\"token\"}"));
-//        });
-//        vertx.setPeriodic(1,h->{
-//            vertx.eventBus().send(id, Buffer.buffer("\"header\":{\"from\":\"demoData\",\"to\":\"demoData\",\"type\":0,\"QoS\":1,\"rc\":1,\"fp\":\"demoData\",\"dataType\":\"demoData\"},\"data\":\"token\"}"));
-//        });
-//        vertx.setPeriodic(1,h->{
-//            vertx.eventBus().send(id, Buffer.buffer("\"header\":{\"from\":\"demoData\",\"to\":\"demoData\",\"type\":0,\"QoS\":1,\"rc\":1,\"fp\":\"demoData\",\"dataType\":\"demoData\"},\"data\":\"token\"}"));
-//        });
-//        vertx.setPeriodic(1,h->{
-//            vertx.eventBus().send(id, Buffer.buffer("\"header\":{\"from\":\"demoData\",\"to\":\"demoData\",\"type\":0,\"QoS\":1,\"rc\":1,\"fp\":\"demoData\",\"dataType\":\"demoData\"},\"data\":\"token\"}"));
-//        });
-//        vertx.setPeriodic(1,h->{
-//            vertx.eventBus().send(id, Buffer.buffer("\"header\":{\"from\":\"demoData\",\"to\":\"demoData\",\"type\":0,\"QoS\":1,\"rc\":1,\"fp\":\"demoData\",\"dataType\":\"demoData\"},\"data\":\"token\"}"));
-//        });
-//        vertx.setPeriodic(1,h->{
-//            vertx.eventBus().send(id, Buffer.buffer("\"header\":{\"from\":\"demoData\",\"to\":\"demoData\",\"type\":0,\"QoS\":1,\"rc\":1,\"fp\":\"demoData\",\"dataType\":\"demoData\"},\"data\":\"token\"}"));
-//        });
-//        vertx.setPeriodic(1,h->{
-//            vertx.eventBus().send(id, Buffer.buffer("\"header\":{\"from\":\"demoData\",\"to\":\"demoData\",\"type\":0,\"QoS\":1,\"rc\":1,\"fp\":\"demoData\",\"dataType\":\"demoData\"},\"data\":\"token\"}"));
-//        });
-//        vertx.setPeriodic(1,h->{
-//            vertx.eventBus().send(id, Buffer.buffer("\"header\":{\"from\":\"demoData\",\"to\":\"demoData\",\"type\":0,\"QoS\":1,\"rc\":1,\"fp\":\"demoData\",\"dataType\":\"demoData\"},\"data\":\"token\"}"));
-//        });
-//        vertx.setPeriodic(1,h->{
-//            vertx.eventBus().send(id, Buffer.buffer("\"header\":{\"from\":\"demoData\",\"to\":\"demoData\",\"type\":0,\"QoS\":1,\"rc\":1,\"fp\":\"demoData\",\"dataType\":\"demoData\"},\"data\":\"token\"}"));
-//        });
+        vertx.setPeriodic(1,h->{
+            vertx.eventBus().send(id, ProtocolFactory.buildAuthorizationReq("Client","Server","Token"));
+        });
+        vertx.setPeriodic(1,h->{
+            vertx.eventBus().send(id, ProtocolFactory.buildAuthorizationReq("Client","Server","Token"));
+        });
+        vertx.setPeriodic(1,h->{
+            vertx.eventBus().send(id, ProtocolFactory.buildAuthorizationReq("Client","Server","Token"));
+        });
+        vertx.setPeriodic(1,h->{
+            vertx.eventBus().send(id, ProtocolFactory.buildAuthorizationReq("Client","Server","Token"));
+        });
+        vertx.setPeriodic(1,h->{
+            vertx.eventBus().send(id, ProtocolFactory.buildAuthorizationReq("Client","Server","Token"));
+        });
+        vertx.setPeriodic(1,h->{
+            vertx.eventBus().send(id, ProtocolFactory.buildAuthorizationReq("Client","Server","Token"));
+        });
+        vertx.setPeriodic(1,h->{
+            vertx.eventBus().send(id, ProtocolFactory.buildAuthorizationReq("Client","Server","Token"));
+        });
+        vertx.setPeriodic(1,h->{
+            vertx.eventBus().send(id, ProtocolFactory.buildAuthorizationReq("Client","Server","Token"));
+        });
+        vertx.setPeriodic(1,h->{
+            vertx.eventBus().send(id, ProtocolFactory.buildAuthorizationReq("Client","Server","Token"));
+        });
+        vertx.setPeriodic(1,h->{
+            vertx.eventBus().send(id, ProtocolFactory.buildAuthorizationReq("Client","Server","Token"));
+        });
+        vertx.setPeriodic(1,h->{
+            vertx.eventBus().send(id, ProtocolFactory.buildAuthorizationReq("Client","Server","Token"));
+        });
+        vertx.setPeriodic(1,h->{
+            vertx.eventBus().send(id, ProtocolFactory.buildAuthorizationReq("Client","Server","Token"));
+        });
+        vertx.setPeriodic(1,h->{
+            vertx.eventBus().send(id, ProtocolFactory.buildAuthorizationReq("Client","Server","Token"));
+        });
+        vertx.setPeriodic(1,h->{
+            vertx.eventBus().send(id, ProtocolFactory.buildAuthorizationReq("Client","Server","Token"));
+        });
+        vertx.setPeriodic(1,h->{
+            vertx.eventBus().send(id, ProtocolFactory.buildAuthorizationReq("Client","Server","Token"));
+        });
+        vertx.setPeriodic(1,h->{
+            vertx.eventBus().send(id, ProtocolFactory.buildAuthorizationReq("Client","Server","Token"));
+        });
+        vertx.setPeriodic(1,h->{
+            vertx.eventBus().send(id, ProtocolFactory.buildAuthorizationReq("Client","Server","Token"));
+        });
+        vertx.setPeriodic(1,h->{
+            vertx.eventBus().send(id, ProtocolFactory.buildAuthorizationReq("Client","Server","Token"));
+        });
+        vertx.setPeriodic(1,h->{
+            vertx.eventBus().send(id, ProtocolFactory.buildAuthorizationReq("Client","Server","Token"));
+        });
         super.start(startPromise);
     }
 

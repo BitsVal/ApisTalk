@@ -1,18 +1,22 @@
 package com.upuphub.talk.server.network;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import com.upuphub.talk.server.factory.ProtocalFactory;
 import com.upuphub.talk.server.protocol.Protocol;
 import io.vertx.core.Handler;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.net.NetSocket;
 import io.vertx.core.parsetools.RecordParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Inspiration S.P.A Leo
  * @date create time 2021-03-13 14:58
  **/
 public class ProtocolLengthRecordParser {
+    private static final Logger logger = LoggerFactory.getLogger(ProtocolLengthRecordParser.class);
     private static final Integer FRAME_TOKEN_SIZE = 4;
 
     public static RecordParser newProtocolParser(NetSocket netSocket, EventBus eventBus){
@@ -38,7 +42,9 @@ public class ProtocolLengthRecordParser {
                         Protocol protocol = null;
                         try {
                             protocol = Protocol.parseFrom(buf);
-                            eventBus.send("",protocol);
+                            netSocket.write(ProtocalFactory.buildAuthorizationReq("Server","Client","Token"));
+                            logger.debug(protocol.toString());
+//                            eventBus.send("",protocol);
                         } catch (InvalidProtocolBufferException e) {
                             netSocket.close();
                             return;
