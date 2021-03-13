@@ -16,7 +16,6 @@ public abstract class Gateway extends AbstractVerticle {
     protected int port;
     protected String host = "0.0.0.0";
 
-
     public static boolean isSupportUDP(int support)
     {
         return (support & SUPPORT_UDP) == SUPPORT_UDP;

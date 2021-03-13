@@ -9,6 +9,9 @@ import com.upuphub.talk.server.protocol.Protocol;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 服务启动入口
  *
@@ -17,25 +20,23 @@ import io.vertx.core.Vertx;
  **/
 public abstract class ServerLauncher {
     public static int supportedGateways = 0;
+
     private boolean running = false;
-    private Gateway TCP_GATEWAY;
-    private Gateway UDP_GATEWAY;
+    private Map<String,Integer> handlerConfigMap = new HashMap<>();
 
     protected void initGateways()
     {
-        if(Gateway.isSupportUDP(supportedGateways))
-        {
-            UDP_GATEWAY = new UDPGateway();
+        if(Gateway.isSupportUDP(supportedGateways)) {
+//            handlerConfigMap.put()
         }
 
-        if(Gateway.isSupportTCP(supportedGateways))
-        {
-            TCP_GATEWAY = new TcpGateway();
+        if(Gateway.isSupportTCP(supportedGateways)) {
+//            handlerConfigMap.put(TcpGateway.class.getName(),)
         }
     }
 
     public void startup() throws Exception{
-        Environment environment = new Environment(Vertx.vertx());
+        Environment environment = Environment.getInstance(Vertx.vertx());
         Environment.getVertx().eventBus().registerDefaultCodec(Protocol.class, ProtocolMsgCodec.create());
         Environment.getVertx().deployVerticle(TcpGateway.class.getName(), new DeploymentOptions().setInstances(8));
         Environment.getVertx().deployVerticle(AuthProtocolHandler.class.getName(),new DeploymentOptions().setInstances(8));

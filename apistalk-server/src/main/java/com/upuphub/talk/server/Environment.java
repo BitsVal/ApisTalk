@@ -20,11 +20,12 @@ public final class Environment {
     private static final transient Map<String, Set<String>> P2S_ONLINE_SOCKETS = new ConcurrentHashMap<>();
     private static final transient Map<String,String> S2P_ONLINE_SOCKETS = new ConcurrentHashMap<>();
 
-    private static Environment instance = null;
+    private final static transient Environment instance = new Environment();
     private static Vertx vertx;
 
-    public Environment(Vertx vertx) {
+    public static Environment getInstance(Vertx vertx) {
         Environment.vertx = vertx;
+        return instance;
     }
 
     public static Vertx getVertx() {
