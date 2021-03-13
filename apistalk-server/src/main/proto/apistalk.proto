@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package com.upuphub.apistalk;
+option java_package = "com.upuphub.talk.server.protocol";
+option java_multiple_files = true;
+option optimize_for = SPEED;
+
+enum CMD{
+  // 通用协议: 连接认证请求
+  CMD_AUTHORIZATION_REQ = 0;
+  CMD_AUTHORIZATION_RSP = 1000;
+
+  //通用协议: 服务与客户端之间的连接心跳
+  CMD_HEARTBEAT_REQ = 1;
+  CMD_HEARTBEAT_RSP = 1001;
+
+  //通用协议: 服务与客户端传输保障请求
+  CMD_QOS_RECEIVED_REQ = 2;
+  CMD_QOS_RECEIVED_RSP = 1002;
+
+  //通用协议: 服务请求消息回显
+  CMD_ECHO_REQ = 3;
+  CMD_ECHO_RSP = 1003;
+}
+
+enum QoS{
+  AT_MOST_ONCE = 0;
+  AT_LEAST_ONCE = 1;
+  ONLY_ONCE = 2;
+}
+
+message Header{
+  CMD cmd = 1;
+  string from = 2;
+  string to = 3;
+  QoS qos = 4;
+  string fingerPrint = 5;
+  uint32 retryCount = 6;
+  string version = 7;
+}
+
+message Protocol{
+    Header header = 1;
+    bytes data = 2;
+}

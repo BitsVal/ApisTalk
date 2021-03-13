@@ -1,4 +1,4 @@
-package com.upuphub.talk.server.protocol;
+package com.upuphub.talk.server.protocolold;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -10,13 +10,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Inspiration S.P.A Leo
  * @date create time 2021-03-08 18:08
  **/
-public class Protocol {
+public class Protocol_OLD {
     @JsonProperty("header")
     protected Header header;
     @JsonProperty("data")
     protected String data;
 
-    public Protocol() {
+    public Protocol_OLD() {
     }
 
     public static class R {
@@ -126,7 +126,7 @@ public class Protocol {
         }
     }
 
-    public Protocol(Header header, String data) {
+    public Protocol_OLD(Header header, String data) {
         this.header = header;
         this.data = data;
     }

@@ -12,6 +12,7 @@ public abstract class Gateway extends AbstractVerticle {
     public static final int SUPPORT_UDP = 0x0001;
     public static final int SUPPORT_TCP = 0x0002;
 
+
     protected int port;
     protected String host = "0.0.0.0";
 

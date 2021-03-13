@@ -1,7 +1,7 @@
 package com.upuphub.talk.server.handler.system;
 
 import com.upuphub.talk.server.handler.AbstractApisHandler;
-import com.upuphub.talk.server.protocol.ProtocolType;
+import com.upuphub.talk.server.protocolold.ProtocolType;
 import io.vertx.core.Promise;
 
 /**

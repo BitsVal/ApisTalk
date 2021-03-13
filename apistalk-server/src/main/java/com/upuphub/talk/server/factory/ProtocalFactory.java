@@ -2,11 +2,9 @@ package com.upuphub.talk.server.factory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.upuphub.talk.server.protocol.Protocol;
-import com.upuphub.talk.server.protocol.ProtocolType;
+import com.upuphub.talk.server.protocolold.Protocol_OLD;
+import com.upuphub.talk.server.protocolold.ProtocolType;
 import io.vertx.core.buffer.Buffer;
-import io.vertx.core.json.JsonObject;
 
 import java.util.UUID;
 
@@ -21,8 +19,8 @@ public final class ProtocalFactory {
 
     public static Buffer createProtocolErrorResponse(String from,String to){
         try {
-            Protocol protocol = new Protocol();
-            Protocol.Header header = new Protocol.Header();
+            Protocol_OLD protocolOLD = new Protocol_OLD();
+            Protocol_OLD.Header header = new Protocol_OLD.Header();
             header.setFrom(from);
             header.setTo(to);
             header.setDataType("Json");
@@ -30,9 +28,9 @@ public final class ProtocalFactory {
             header.setType(ProtocolType.S.FROM_SERVER_TYPE_OF_RESPONSE$FOR$ERROR);
             header.setFp(UUID.randomUUID().toString());
             header.setQoS((byte) 0);
-            protocol.setHeader(header);
-            protocol.setData("Error Protocol");
-            return Buffer.buffer(objectMapper.writeValueAsString(protocol));
+            protocolOLD.setHeader(header);
+            protocolOLD.setData("Error Protocol");
+            return Buffer.buffer(objectMapper.writeValueAsString(protocolOLD));
         }catch (JsonProcessingException ex){
             return Buffer.buffer("");
         }

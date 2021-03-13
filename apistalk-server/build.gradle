@@ -35,19 +35,6 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
-
-sourceSets {
-    main {
-        java {
-            srcDirs 'src/main/java/com/upuphub/talk/server/protocol/impl'
-        }
-        proto {
-            //指定.proto文件路径
-            srcDir '/src/main/resource/protocol'
-        }
-    }
-}
-
 protobuf {
     protoc {
         // Download from repositories
@@ -55,7 +42,6 @@ protobuf {
     }
 
     generateProtoTasks {
-        // all() returns the collection of all protoc tasks
         all().each { task ->
             task.builtins {
                 java {
@@ -65,7 +51,6 @@ protobuf {
         }
     }
     //生成目录
-    generatedFilesBaseDir = "$projectDir/src/main/java/"
-
+    generatedFilesBaseDir = "$projectDir/src/"
 }
 
