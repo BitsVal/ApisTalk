@@ -1,6 +1,6 @@
 package com.upuphub.talk.server.handler;
 
-import com.upuphub.talk.server.protocol.Protocol;
+import com.upuphub.talk.server.protocol.ProtocolPackage;
 import io.vertx.core.eventbus.Message;
 
 /**
@@ -9,5 +9,5 @@ import io.vertx.core.eventbus.Message;
  **/
 public interface ApisHandler {
     String  bindEventAddress();
-    void handler(Message<Protocol> protocolMsg);
+    void handler(Message<ProtocolPackage> protocolMsg) throws Exception;
 }

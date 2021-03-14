@@ -17,8 +17,10 @@ public abstract class AbstractSystemProtocolHandler extends AbstractProtocolHand
 
     @Override
     public String bindEventAddress() {
-        return ProtocolTypeFactory.getEventAddressByCmd(requestCmd());
+        return ProtocolTypeFactory.getEventAddressByCmd(command());
     }
 
-    abstract CMD requestCmd();
+
+
+    abstract CMD command();
 }

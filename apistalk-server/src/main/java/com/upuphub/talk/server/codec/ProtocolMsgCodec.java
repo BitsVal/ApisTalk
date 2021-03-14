@@ -1,7 +1,8 @@
-package com.upuphub.talk.server.event;
+package com.upuphub.talk.server.codec;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.upuphub.talk.server.protocol.Protocol;
+import com.upuphub.talk.server.protocol.ProtocolPackage;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.eventbus.MessageCodec;
 
@@ -9,22 +10,22 @@ import io.vertx.core.eventbus.MessageCodec;
  * @author Inspiration S.P.A Leo
  * @date create time 2021-03-13 21:04
  **/
-public class ProtocolMsgCodec implements MessageCodec<Protocol,Protocol> {
+public class ProtocolMsgCodec implements MessageCodec<ProtocolPackage,ProtocolPackage> {
     /**
      * Protocol To Buffer
      */
     @Override
-    public void encodeToWire(Buffer buffer, Protocol protocol) {
-        Buffer.buffer(protocol.toByteArray());
+    public void encodeToWire(Buffer buffer, ProtocolPackage protocolPackage) {
+        Buffer.buffer(protocolPackage.toByteArray());
     }
 
     /**
      * Buffer To Protocol
      */
     @Override
-    public Protocol decodeFromWire(int pos, Buffer buffer) {
+    public ProtocolPackage decodeFromWire(int pos, Buffer buffer) {
         try {
-            return Protocol.parseFrom(buffer.getBytes());
+            return ProtocolPackage.parseFrom(buffer.getBytes());
         } catch (InvalidProtocolBufferException e) {
             return null;
         }
@@ -34,8 +35,8 @@ public class ProtocolMsgCodec implements MessageCodec<Protocol,Protocol> {
      * 消息转换
      */
     @Override
-    public Protocol transform(Protocol protocol) {
-        return protocol;
+    public ProtocolPackage transform(ProtocolPackage protocolPackage) {
+        return protocolPackage;
     }
 
     @Override
@@ -48,7 +49,7 @@ public class ProtocolMsgCodec implements MessageCodec<Protocol,Protocol> {
         return -1;
     }
 
-    public static MessageCodec<Protocol,Protocol> create() {
+    public static MessageCodec<ProtocolPackage,ProtocolPackage> create() {
         return new ProtocolMsgCodec();
     }
 }

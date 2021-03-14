@@ -1,8 +1,8 @@
 package com.upuphub.talk.server.handler.system;
 
 import com.upuphub.talk.server.factory.ProtocolFactory;
-import com.upuphub.talk.server.protocol.CMD;
-import com.upuphub.talk.server.protocol.Protocol;
+import com.upuphub.talk.server.factory.ProtocolPackageFactory;
+import com.upuphub.talk.server.protocol.*;
 import io.vertx.core.Promise;
 import io.vertx.core.eventbus.Message;
 import org.slf4j.Logger;
@@ -23,13 +23,19 @@ public class AuthProtocolHandler extends AbstractSystemProtocolHandler {
     }
 
     @Override
-    CMD requestCmd() {
+    CMD command() {
         return CMD.CMD_AUTHORIZATION_REQ;
     }
 
 
     @Override
-    public void handler(Message<Protocol> protocolMsg) {
-        protocolMsg.reply(ProtocolFactory.buildAuthorizationReq("1","2","3"));
+    public void handler(Message<ProtocolPackage> protocolMsg) throws Exception {
+        Protocol protocolReq = protocolMsg.body().getProtocol();
+        AuthorizationReq authorizationReq = AuthorizationReq.parseFrom(protocolReq.getData());
+        String token = authorizationReq.getToken();
+        String from = protocolReq.getHeader().getFrom();
+        Protocol protocolRsp = ProtocolFactory.buildAuthorizationRsp(protocolReq.getHeader().getFrom());
+        ProtocolPackage protocolPackage = ProtocolPackageFactory.buildProtocolPackageByProtocolRsp(protocolRsp, HANDLER_CODE.SUCCESS);
+        protocolMsg.reply(protocolPackage);
     }
 }

@@ -20,7 +20,7 @@ public class TcpGateway extends Gateway {
         before();
         vertx.createNetServer().connectHandler(socket->{
 
-            socket.handler(ProtocolLengthRecordParser.newProtocolParser(socket,vertx.eventBus()));//event -> {
+            socket.handler(ProtocolLengthRecordParser.newProtocolParser(socket,vertx.eventBus()));
             // 监听客户端的退出连接
             socket.closeHandler(close -> logger.info("客户端退出 - [{}]",socket.writeHandlerID()));
         }).listen(port,host, net -> {
