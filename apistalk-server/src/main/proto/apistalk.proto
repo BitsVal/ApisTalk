@@ -65,6 +65,8 @@ enum MESSAGE_CODE{
   MC_UNKNOWN = 0;
   // 消息处理完成的业务码: 处理成功
   MC_SUCCESS = 100;
+  // 消息处理完成的业务码: 重复请求
+  MC_DUPLICATE = 101;
   // 消息处理完成的业务码: 处理失败
   MC_FAILED = 200;
 }

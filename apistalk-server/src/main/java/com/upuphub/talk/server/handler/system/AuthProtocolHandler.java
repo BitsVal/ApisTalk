@@ -1,7 +1,10 @@
 package com.upuphub.talk.server.handler.system;
 
+import com.upuphub.talk.server.Environment;
 import com.upuphub.talk.server.factory.ProtocolFactory;
 import com.upuphub.talk.server.factory.ProtocolPackageFactory;
+import com.upuphub.talk.server.handler.HandlerManger;
+import com.upuphub.talk.server.handler.HandlerType;
 import com.upuphub.talk.server.protocol.*;
 import io.vertx.core.Promise;
 import io.vertx.core.eventbus.Message;
@@ -30,11 +33,26 @@ public class AuthProtocolHandler extends AbstractSystemProtocolHandler {
     @Override
     public void handler(Message<ProtocolPackage> protocolMsg) throws Exception {
         Protocol protocolReq = protocolMsg.body().getProtocol();
-        AuthorizationReq authorizationReq = AuthorizationReq.parseFrom(protocolReq.getData());
-        String token = authorizationReq.getToken();
-        String from = protocolReq.getHeader().getFrom();
-        Protocol protocolRsp = ProtocolFactory.buildAuthorizationRsp(protocolReq.getHeader().getFrom());
-        ProtocolPackage protocolPackage = ProtocolPackageFactory.buildProtocolPackageByProtocolRsp(protocolRsp, HANDLER_CODE.HC_SUCCESS);
-        protocolMsg.reply(protocolPackage);
+        if(Environment.isRegistered(protocolReq.getHeader().getFrom())){
+            Protocol protocolRsp = ProtocolFactory.buildAuthorizationRsp(
+                    protocolReq.getHeader().getFrom(),MESSAGE_CODE.MC_DUPLICATE,"repeat authentication");
+            ProtocolPackage protocolPackage = ProtocolPackageFactory.buildProtocolPackageByProtocolRsp(
+                    protocolRsp, HANDLER_CODE.HC_SUCCESS);
+            protocolMsg.reply(protocolPackage);
+        }else if(HandlerManger.hasHandler(HandlerType.AUTHORIZATION)){
+            vertx.eventBus().<ProtocolPackage>request(HandlerType.AUTHORIZATION.getAddress(),protocolMsg.body(),rsp->{
+                if(rsp.succeeded() && null != rsp.result()){
+                    // 处理成功直接返回用户注册处理器的回包
+                    protocolMsg.reply(rsp.result());
+                }else {
+                    // 处理失败
+                    Protocol protocolRsp = ProtocolFactory.buildAuthorizationRsp(
+                            protocolReq.getHeader().getFrom(),MESSAGE_CODE.MC_FAILED,"illegal connection");
+                    ProtocolPackage protocolPackage = ProtocolPackageFactory.buildProtocolPackageByProtocolRsp(
+                            protocolRsp, HANDLER_CODE.HC_UNAUTHORIZED);
+                    protocolMsg.reply(protocolPackage);
+                }
+            });
+        }
     }
 }

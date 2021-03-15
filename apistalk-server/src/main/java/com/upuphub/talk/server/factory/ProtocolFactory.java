@@ -6,7 +6,6 @@ import com.upuphub.talk.server.protocol.*;
 import com.upuphub.talk.server.utils.NumberUtil;
 import io.vertx.core.buffer.Buffer;
 
-import java.nio.charset.Charset;
 import java.util.UUID;
 
 /**
@@ -19,17 +18,31 @@ public final class ProtocolFactory {
     private static final String SERVER_VERSION =
             String.format("%s.%s",ApisServerConfig.APIS_SERVER_NAME,ApisServerConfig.APIS_SERVER_VERSION);
 
-    public static Protocol buildAuthorizationRsp(String to){
+    public static Protocol buildAuthorizationRsp(String to,MESSAGE_CODE msgCode,String message){
        return Protocol.newBuilder()
-                .setHeader(Header.newBuilder()
-                        .setCmd(CMD.CMD_AUTHORIZATION_RSP)
-                        .setFrom(SERVER_VERSION)
-                        .setTo(to)
-                        .setFingerPrint(UUID.randomUUID().toString())
-                        .setRetryCount(0)
-                        .setQos(QoS.QoS_AT_MOST_ONCE)
-                        .build())
-                .setData(AuthorizationRsp.newBuilder().build().toByteString())
+               .setStatus(buildCommonProtocolStatus(msgCode,message))
+               .setHeader(buildCommonProtocolHeader(CMD.CMD_AUTHORIZATION_RSP,to,UUID.randomUUID().toString(),QoS.QoS_AT_MOST_ONCE,0))
+               .setData(AuthorizationRsp.newBuilder().build().toByteString())
+               .build();
+    }
+
+    public static Status buildCommonProtocolStatus(MESSAGE_CODE msgCode,String message){
+        return Status.newBuilder()
+                .setCode(msgCode)
+                .setMessage(message)
+                .setTimestamp(System.currentTimeMillis())
+                .setVersion(SERVER_VERSION)
+                .build();
+    }
+
+    public static Header buildCommonProtocolHeader(CMD cmd,String to,String fingerPrint,QoS qos,Integer retryCount){
+        return Header.newBuilder()
+                .setCmd(cmd)
+                .setFrom(ApisServerConfig.SERVER_PROTOCOL_TO)
+                .setTo(to)
+                .setFingerPrint(fingerPrint)
+                .setRetryCount(retryCount)
+                .setQos(qos)
                 .build();
     }
 
@@ -37,22 +50,4 @@ public final class ProtocolFactory {
         byte[] bytes = protocol.toByteArray();
         return Buffer.buffer(NumberUtil.intToByte4(bytes.length)).appendBytes(bytes);
     }
-
-
-//    public static Buffer buildAuthorizationReq(String from, String to, String value){
-//        Protocol protocol = Protocol.newBuilder()
-//                .setHeader(Header.newBuilder()
-//                        .setCmd(CMD.CMD_AUTHORIZATION_RSP)
-//                        .setFrom(from)
-//                        .setTo(to)
-//                        .setFingerPrint(UUID.randomUUID().toString())
-//                        .setRetryCount(0)
-//                        .setQos(QoS.AT_MOST_ONCE)
-//                        .setVersion(SERVER_VERSION)
-//                        .build())
-//                .setData(ByteString.copyFrom(value, Charset.defaultCharset()))
-//                .build();
-//        byte[] bytes = protocol.toByteArray();
-//        return Buffer.buffer(NumberUtil.intToByte4(bytes.length)).appendBytes(bytes);
-//    }
 }

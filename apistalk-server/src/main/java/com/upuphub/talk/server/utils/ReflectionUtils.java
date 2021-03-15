@@ -49,30 +49,6 @@ public final class ReflectionUtils {
 
 
     /**
-     * scan the classes marked by the specified annotation in the specified package
-     *
-     * @param packageNames specified package name
-     * @param annotationList  specified annotation
-     * @return the classes marked by the specified annotation in the specified package
-     */
-    public static Map<Class<? extends Annotation>,Set<Class<?>>> scanAnnotatedClasses(String[] packageNames, Set<Class<? extends Annotation>> annotationList) {
-        if(null == packageNames || null == annotationList || 0 == packageNames.length || 0 == annotationList.size()){
-            throw new CheckClassScanParamsException("Not find scan the classes Params");
-        }
-        Reflections reflections = new Reflections(packageNames, new TypeAnnotationsScanner());
-        Map<Class<? extends Annotation>,Set<Class<?>>> annotatedClassesMap = new ConcurrentHashMap<>(annotationList.size());
-        for (Class<? extends Annotation> annotation : annotationList) {
-            Set<Class<?>> annotatedClass = reflections.getTypesAnnotatedWith(annotation, true);
-            if(!annotatedClass.isEmpty()){
-                logger.trace("The number of class Annotated with  @{} :[{}]",annotation.getSimpleName(),annotatedClass.size());
-                annotatedClassesMap.put(annotation,annotatedClass) ;
-            }
-        }
-        return annotatedClassesMap;
-    }
-
-
-    /**
      * Get the implementation class of the interface
      *
      * @param packageNames    specified package name
