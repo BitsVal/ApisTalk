@@ -27,7 +27,6 @@ public class AuthProtocolHandler extends AbstractSystemProtocolHandler {
         return CMD.CMD_AUTHORIZATION_REQ;
     }
 
-
     @Override
     public void handler(Message<ProtocolPackage> protocolMsg) throws Exception {
         Protocol protocolReq = protocolMsg.body().getProtocol();
