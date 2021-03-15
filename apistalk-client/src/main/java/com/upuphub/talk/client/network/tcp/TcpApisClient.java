@@ -1,6 +1,5 @@
 package com.upuphub.talk.client.network.tcp;
 
-import com.upuphub.talk.client.factory.ProtocolFactory;
 import com.upuphub.talk.client.network.ApisClient;
 import com.upuphub.talk.client.network.ProtocolLengthRecordParser;
 import io.vertx.core.Promise;
@@ -24,66 +23,6 @@ public class TcpApisClient extends ApisClient {
                 id = socket.writeHandlerID();
                 res.result().handler(ProtocolLengthRecordParser.newProtocolParser(socket, vertx.eventBus()));
             }
-        });
-        vertx.setPeriodic(1,h->{
-            vertx.eventBus().send(id, ProtocolFactory.buildAuthorizationReq("Client","Server","Token"));
-        });
-        vertx.setPeriodic(1,h->{
-            vertx.eventBus().send(id, ProtocolFactory.buildAuthorizationReq("Client","Server","Token"));
-        });
-        vertx.setPeriodic(1,h->{
-            vertx.eventBus().send(id, ProtocolFactory.buildAuthorizationReq("Client","Server","Token"));
-        });
-        vertx.setPeriodic(1,h->{
-            vertx.eventBus().send(id, ProtocolFactory.buildAuthorizationReq("Client","Server","Token"));
-        });
-        vertx.setPeriodic(1,h->{
-            vertx.eventBus().send(id, ProtocolFactory.buildAuthorizationReq("Client","Server","Token"));
-        });
-        vertx.setPeriodic(1,h->{
-            vertx.eventBus().send(id, ProtocolFactory.buildAuthorizationReq("Client","Server","Token"));
-        });
-        vertx.setPeriodic(1,h->{
-            vertx.eventBus().send(id, ProtocolFactory.buildAuthorizationReq("Client","Server","Token"));
-        });
-        vertx.setPeriodic(1,h->{
-            vertx.eventBus().send(id, ProtocolFactory.buildAuthorizationReq("Client","Server","Token"));
-        });
-        vertx.setPeriodic(1,h->{
-            vertx.eventBus().send(id, ProtocolFactory.buildAuthorizationReq("Client","Server","Token"));
-        });
-        vertx.setPeriodic(1,h->{
-            vertx.eventBus().send(id, ProtocolFactory.buildAuthorizationReq("Client","Server","Token"));
-        });
-        vertx.setPeriodic(1,h->{
-            vertx.eventBus().send(id, ProtocolFactory.buildAuthorizationReq("Client","Server","Token"));
-        });
-        vertx.setPeriodic(1,h->{
-            vertx.eventBus().send(id, ProtocolFactory.buildAuthorizationReq("Client","Server","Token"));
-        });
-        vertx.setPeriodic(1,h->{
-            vertx.eventBus().send(id, ProtocolFactory.buildAuthorizationReq("Client","Server","Token"));
-        });
-        vertx.setPeriodic(1,h->{
-            vertx.eventBus().send(id, ProtocolFactory.buildAuthorizationReq("Client","Server","Token"));
-        });
-        vertx.setPeriodic(1,h->{
-            vertx.eventBus().send(id, ProtocolFactory.buildAuthorizationReq("Client","Server","Token"));
-        });
-        vertx.setPeriodic(1,h->{
-            vertx.eventBus().send(id, ProtocolFactory.buildAuthorizationReq("Client","Server","Token"));
-        });
-        vertx.setPeriodic(1,h->{
-            vertx.eventBus().send(id, ProtocolFactory.buildAuthorizationReq("Client","Server","Token"));
-        });
-        vertx.setPeriodic(1,h->{
-            vertx.eventBus().send(id, ProtocolFactory.buildAuthorizationReq("Client","Server","Token"));
-        });
-        vertx.setPeriodic(1,h->{
-            vertx.eventBus().send(id, ProtocolFactory.buildAuthorizationReq("Client","Server","Token"));
-        });
-        vertx.setPeriodic(1,h->{
-            vertx.eventBus().send(id, ProtocolFactory.buildAuthorizationReq("Client","Server","Token"));
         });
         super.start(startPromise);
     }

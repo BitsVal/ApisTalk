@@ -1,6 +1,6 @@
 package com.upuphub.talk.client.process;
 
-import com.upuphub.talk.client.protocol_old.ProtocolOld;
+import com.upuphub.talk.client.protocol.ProtocolPackage;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
 import io.vertx.core.eventbus.Message;
@@ -12,12 +12,12 @@ import io.vertx.core.eventbus.Message;
 public abstract class AbstractProtocolProcess extends AbstractVerticle {
     @Override
     public void start(Promise<Void> startPromise) throws Exception {
-        vertx.eventBus().<ProtocolOld>consumer(bindEventAddress())
+        vertx.eventBus().<ProtocolPackage>consumer(bindEventAddress())
                 .handler(this::handler);
         startPromise.complete();
     }
 
 
     abstract String bindEventAddress();
-    abstract void handler(Message<ProtocolOld> protocolMsg);
+    abstract void handler(Message<ProtocolPackage> protocolMsg);
 }
