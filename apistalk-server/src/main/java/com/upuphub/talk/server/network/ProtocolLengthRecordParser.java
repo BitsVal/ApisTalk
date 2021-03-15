@@ -51,12 +51,20 @@ public class ProtocolLengthRecordParser {
                                         if(rsp.succeeded() && null != rsp.result().body()){
                                             ProtocolPackage protocolPackageRsp = rsp.result().body();
                                             switch (protocolPackageRsp.getHandlerCode()){
-                                                case SUCCESS:
+                                                case HC_SUCCESS:
                                                     netSocket.write(ProtocolFactory.buildProtocolBuffer(protocolPackageRsp.getProtocol()));
                                                     break;
-                                                case UNAUTHORIZED:
+                                                case HC_UNAUTHORIZED:
+                                                    netSocket.close();
+                                                    break;
+                                                case HC_WARNING:
+
+                                                    break;
+                                                case HC_FAILED:
+                                                    netSocket.close();
                                                     break;
                                                 default:
+                                                    // 不支持的处理类型
                                                     break;
                                             }
                                         }else{

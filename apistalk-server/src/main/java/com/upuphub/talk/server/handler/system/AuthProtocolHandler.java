@@ -35,7 +35,7 @@ public class AuthProtocolHandler extends AbstractSystemProtocolHandler {
         String token = authorizationReq.getToken();
         String from = protocolReq.getHeader().getFrom();
         Protocol protocolRsp = ProtocolFactory.buildAuthorizationRsp(protocolReq.getHeader().getFrom());
-        ProtocolPackage protocolPackage = ProtocolPackageFactory.buildProtocolPackageByProtocolRsp(protocolRsp, HANDLER_CODE.SUCCESS);
+        ProtocolPackage protocolPackage = ProtocolPackageFactory.buildProtocolPackageByProtocolRsp(protocolRsp, HANDLER_CODE.HC_SUCCESS);
         protocolMsg.reply(protocolPackage);
     }
 }

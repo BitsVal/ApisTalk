@@ -27,8 +27,7 @@ public final class ProtocolFactory {
                         .setTo(to)
                         .setFingerPrint(UUID.randomUUID().toString())
                         .setRetryCount(0)
-                        .setQos(QoS.AT_MOST_ONCE)
-                        .setVersion(SERVER_VERSION)
+                        .setQos(QoS.QoS_AT_MOST_ONCE)
                         .build())
                 .setData(AuthorizationRsp.newBuilder().build().toByteString())
                 .build();
