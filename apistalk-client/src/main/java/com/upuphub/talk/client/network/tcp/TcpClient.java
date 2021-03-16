@@ -11,16 +11,16 @@ import io.vertx.core.net.NetSocket;
  * @author Inspiration S.P.A Leo
  * @date create time 2021-03-11 18:21
  **/
-public class TcpApisClient extends ApisClient {
-    private String id;
+public class TcpClient extends ApisClient {
 
     @Override
     public void start(Promise<Void> startPromise) throws Exception {
         before();
+        eventBus = vertx.eventBus();
         vertx.createNetClient().connect(port, host, res->{
             if(res.succeeded()){
                 NetSocket socket = res.result();
-                id = socket.writeHandlerID();
+                socketId = socket.writeHandlerID();
                 res.result().handler(ProtocolLengthRecordParser.newProtocolParser(socket, vertx.eventBus()));
             }
         });

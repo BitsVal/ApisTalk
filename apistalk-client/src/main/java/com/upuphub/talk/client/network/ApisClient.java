@@ -1,6 +1,7 @@
 package com.upuphub.talk.client.network;
 
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.eventbus.EventBus;
 
 /**
  * 客户端
@@ -9,6 +10,8 @@ import io.vertx.core.AbstractVerticle;
  * @date create time 2021-03-11 18:20
  **/
 public abstract class ApisClient extends AbstractVerticle {
+    protected String socketId;
+    protected EventBus eventBus;
     public static final int SUPPORT_UDP = 0x0001;
     public static final int SUPPORT_TCP = 0x0002;
 

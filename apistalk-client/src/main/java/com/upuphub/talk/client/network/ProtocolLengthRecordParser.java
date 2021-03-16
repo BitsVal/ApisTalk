@@ -1,7 +1,9 @@
 package com.upuphub.talk.client.network;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import com.upuphub.talk.client.factory.ProtocolTypeFactory;
 import com.upuphub.talk.client.protocol.Protocol;
+import com.upuphub.talk.client.protocol.ProtocolPackage;
 import com.upuphub.talk.client.util.NumberUtil;
 import io.vertx.core.Handler;
 import io.vertx.core.buffer.Buffer;
@@ -35,13 +37,41 @@ public class ProtocolLengthRecordParser {
                         // 已经接受到长度信息了，接下来的数据就是protobuf可识别的字节数组
                         byte[] buf = event.getBytes();
                         Protocol protocol = null;
-                        try {
-                            protocol = Protocol.parseFrom(buf);
-                            System.out.println(protocol.toString());
-                        } catch (InvalidProtocolBufferException e) {
-                            netSocket.close();
-                            return;
-                        }
+//                        try {
+//                            protocol = Protocol.parseFrom(buf);
+                            ProtocolPackage protocolPackageReq = ProtocolPackage.newBuilder()
+                                    .setSocketHandlerId(netSocket.writeHandlerID())
+                                    .build();
+//                            eventBus.<ProtocolPackage>request(
+//                                    ProtocolTypeFactory.getEventAddressByCmd(protocol.getHeader().getCmd()),
+//                                    protocolPackageReq, rsp->{
+//                                        if(rsp.succeeded() && null != rsp.result().body()){
+//                                            ProtocolPackage protocolPackageRsp = rsp.result().body();
+//                                            switch (protocolPackageRsp.getHandlerCode()){
+//                                                case HC_SUCCESS:
+//                                                    netSocket.write(ProtocolFactory.buildProtocolBuffer(protocolPackageRsp.getProtocol()));
+//                                                    break;
+//                                                case HC_UNAUTHORIZED:
+//                                                    netSocket.close();
+//                                                    break;
+//                                                case HC_WARNING:
+//
+//                                                    break;
+//                                                case HC_FAILED:
+//                                                    netSocket.close();
+//                                                    break;
+//                                                default:
+//                                                    // 不支持的处理类型
+//                                                    break;
+//                                            }
+//                                        }else{
+//                                            netSocket.write(ProtocolFactory.buildAuthorizationReq("C","S","T"));
+//                                        }
+//                                    });
+//                        } catch (InvalidProtocolBufferException e) {
+//                            netSocket.close();
+//                            return;
+//                        }
                         // 处理完后要将长度改回
                         recordParser.fixedSizeMode(FRAME_TOKEN_SIZE);
                         // 重置size变量

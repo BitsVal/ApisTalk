@@ -41,9 +41,8 @@ public abstract class ServerLauncher {
         Environment.getVertx().eventBus().registerDefaultCodec(ProtocolPackage.class, ProtocolMsgCodec.create());
         Environment.getVertx().deployVerticle(TcpGateway.class.getName(), new DeploymentOptions().setInstances(8));
         Environment.getVertx().deployVerticle(AuthProtocolHandler.class.getName(),new DeploymentOptions().setInstances(8));
-        HandlerManger.getServerApisHandlers().forEach((handler,instances)->{
-            Environment.getVertx().deployVerticle(handler.getName(),new DeploymentOptions().setInstances(instances));
-        });
+        HandlerManger.getServerApisHandlers().forEach((handler,instances)
+                -> Environment.getVertx().deployVerticle(handler.getName(),new DeploymentOptions().setInstances(instances)));
 
     }
 
