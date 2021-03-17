@@ -26,6 +26,11 @@ enum CMD{
   // 通用协议: 连接认证请求
   CMD_AUTHORIZATION_REQ = 4;
   CMD_AUTHORIZATION_RSP = 1004;
+
+  // 通用协议: 传输有效的消息数据
+  CMD_INSTANT_MESSAGING_DATA_REQ = 5;
+  // 通用协议: 传输有效的消息数据
+  CMD_INSTANT_MESSAGING_DATA_RSP = 1005;
 }
 
 enum QoS{

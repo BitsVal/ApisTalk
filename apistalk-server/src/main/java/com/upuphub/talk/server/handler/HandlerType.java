@@ -10,7 +10,8 @@ public enum  HandlerType {
     /**
      * 认证处理请求Handler
      */
-    AUTHORIZATION("apis.s.handler.auth");
+    AUTHORIZATION("apis.s.handler.auth"),
+    IM_STORE("apis.s.handler.im.store");
 
     private final String address;
 

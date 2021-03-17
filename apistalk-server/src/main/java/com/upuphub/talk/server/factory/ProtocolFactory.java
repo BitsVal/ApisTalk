@@ -21,10 +21,22 @@ public final class ProtocolFactory {
     public static Protocol buildAuthorizationRsp(String to,MESSAGE_CODE msgCode,String message){
        return Protocol.newBuilder()
                .setStatus(buildCommonProtocolStatus(msgCode,message))
-               .setHeader(buildCommonProtocolHeader(CMD.CMD_AUTHORIZATION_RSP,to,UUID.randomUUID().toString(),QoS.QoS_AT_MOST_ONCE,0))
+               .setHeader(buildCommonProtocolHeader(
+                       CMD.CMD_AUTHORIZATION_RSP,to,UUID.randomUUID().toString(),QoS.QoS_AT_MOST_ONCE,0))
                .setData(AuthorizationRsp.newBuilder().build().toByteString())
                .build();
     }
+
+    public static Protocol buildEchoRsp(Protocol protocol){
+        return  Protocol.newBuilder(protocol)
+                .setStatus(buildCommonProtocolStatus(MESSAGE_CODE.MC_SUCCESS,"Success"))
+                .setHeader(Header.newBuilder(protocol.getHeader())
+                        .setCmd(CMD.CMD_ECHO_RSP)
+                        .setTo(protocol.getHeader().getFrom())
+                        .setFrom(ApisServerConfig.SERVER_PROTOCOL_TO).build())
+                .build();
+    }
+
 
     public static Status buildCommonProtocolStatus(MESSAGE_CODE msgCode,String message){
         return Status.newBuilder()
