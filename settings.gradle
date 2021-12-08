@@ -1,4 +1,0 @@
-rootProject.name = 'ApisTalk'
-include 'apistalk-core'
-include 'apistalk-bean'
-
