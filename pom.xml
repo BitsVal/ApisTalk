@@ -8,9 +8,12 @@
     <artifactId>apistalk-parent</artifactId>
     <packaging>pom</packaging>
     <version>0.0.1</version>
+
     <modules>
         <module>apistalk-context</module>
+        <module>apistalk-net</module>
     </modules>
+
     <name>APIS::ROOT</name>
 
     <properties>
@@ -19,11 +22,16 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <mavenVersion>2.2.1</mavenVersion>
         <mavenPluginPluginVersion>3.2</mavenPluginPluginVersion>
+        <netty.version>4.1.72.Final</netty.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-all</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>
